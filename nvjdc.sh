@@ -10,8 +10,8 @@ welcome () {
     echo -e "$green安装即将开始"
     echo "如果您想取消安装，"
     echo -e "请在 5 秒钟内按 Ctrl+C 终止此脚本。$plain"
-    echo
     echo -e "$red 有bug可以联系 https://t.me/wwshan $plain"
+    echo
     sleep 5
 }
 
