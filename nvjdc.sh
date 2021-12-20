@@ -18,10 +18,10 @@ welcome () {
 
 install(){
   echo -e "${green}更新源...${plain}"
-  apt update && yum update
+  apt update && yum update > /dev/null 2>&1
   
   echo -e "${green}安装依赖 . . .${plain}"
-  apt install curl wget unzip -y && yum install curl wget unzip -y
+  apt install curl wget unzip -y && yum install curl wget unzip -y > /dev/null 2>&1
 
   echo -e "$green正在检查 Docker 安装情况 . . .$plain"
   if command -v docker >> /dev/null 2>&1;
@@ -29,9 +29,8 @@ install(){
     echo -e "${green}Docker 已安装 . . .$plain"
   else
     echo -e "$green开始安装 Docker . . .$plain"
-    apt install curl -y 
-    curl -fsSL get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh --mirror Aliyun
+    curl -fsSL get.docker.com -o get-docker.sh > /dev/null 2>&1
+    sudo sh get-docker.sh --mirror Aliyun > /dev/null 2>&1
       if command -v docker >> /dev/null 2>&1;
       then
           echo -e "${green}Docker 安装成功 . . .$plain"
@@ -44,10 +43,10 @@ install(){
   fi
 
   echo -e "$green拉取nvjdcdocker源码中 . . .$plain"
-  git clone https://github.com/NolanHzy/nvjdcdocker.git /root/nolanjdc
+  git clone https://github.com/NolanHzy/nvjdcdocker.git /root/nolanjdc > /dev/null 2>&1
   
   echo -e "$green拉取nvjdc镜像中 . . .$plain"
-  sudo docker pull nolanhzy/nvjdc:latest
+  sudo docker pull nolanhzy/nvjdc:latest > /dev/null 2>&1
 
   echo -e "${green}请输入容器名称(如 : nolanjdc) : ${plain}"
   read -p "" name
@@ -172,8 +171,8 @@ install(){
 EOF
 
   echo -e "$green开始下载并配置chromium . . .$plain"
-  cd /root/nolanjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
-  wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip
+  cd /root/nolanjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014 > /dev/null 2>&1
+  wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip > /dev/null 2>&1
   rm  -f chrome-linux.zip
   cd  /root/nolanjdc
 
@@ -181,10 +180,11 @@ EOF
 
   sudo docker run   --name $name -p ${port}:80 -d  -v  "$(pwd)":/app \
 -v /etc/localtime:/etc/localtime:ro \
--it --privileged=true  nolanhzy/nvjdc:latest
+-it --privileged=true  nolanhzy/nvjdc:latest > /dev/null 2>&1
+  echo -e "${green}镜像启动完成${plain}"
+  echo -e "${red}源码安装路径 : /root/nolanjdc ${plain}"
+  docker logs -f nolanjdc
   sleep 5
-  docker logs -f nolanjdc 
-
 }
 
 [[ $EUID -ne 0 ]] && echo -e "${red}错误：${plain} 必须使用root用户运行此脚本！\n" && exit 1
